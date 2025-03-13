@@ -25,18 +25,6 @@
   </a>
 </p>
 
-<p align="center">
-  <a href="https://twitter.com/trimstray" target="_blank">
-    <img src="https://img.shields.io/twitter/follow/trimstray.svg?logo=twitter">
-  </a>
-</p>
-
-<div align="center">
-  <sub>Created by
-  <a href="https://twitter.com/trimstray">trimstray</a> and
-  <a href="https://github.com/trimstray/test-your-sysadmin-skills/graphs/contributors">contributors</a>
-</div>
-
 <br>
 
 ****
@@ -488,15 +476,13 @@ Useful resource:
 </details>
 
 <details>
-<summary><b>You typing <code>CTRL + C</code> but your script still running. How do you stop it? ***</b></summary><br>
+<summary><b>You typing <code>CTRL + C</code> but your script still running. How do you stop it? </b></summary><br>
 
-To be completed.
+In most cases, you can stop a running script by using the `CTRL + C` keyboard combination. This sends an interrupt signal (SIGINT) to the script, which terminates its execution. If this does not work and the script is still running, you can try using the `CTRL + \` combination, which sends a quit signal (SIGQUIT) to the script, which may terminate it immediately.
 
-Useful resources:
+Alternatively, if you are using a terminal or command line interface, you can try using the `kill` command to send a signal to the script process. You can find the process ID (PID) of the script by using the `ps` or `top` command, and then use `kill` with the PID to stop the script.
 
-- [How to kill a script running in terminal, without closing terminal (Ctrl + C doesn't work)? (original)](https://askubuntu.com/questions/520107/how-to-kill-a-script-running-in-terminal-without-closing-terminal-ctrl-c-doe)
-- [What's the difference between ^C and ^D for Unix/Mac OS X terminal?](https://superuser.com/questions/169051/whats-the-difference-between-c-and-d-for-unix-mac-os-x-terminal)
-
+In some cases, you may need to use the `kill -9` command to force the script to stop, as the regular kill command may not work if the script is stuck or not responding. The `-9` option sends a SIGKILL signal, which forces the process to stop immediately.
 </details>
 
 <details>
@@ -4597,9 +4583,27 @@ python -c "import random,string,crypt; randomsalt = ''.join(random.sample(string
 ###### Network Questions (27)
 
 <details>
-<summary><b>Create SPF records for your site to help control spam. ***</b></summary><br>
+<summary><b>Create SPF records for your site to help control spam.</b></summary><br>
 
-To be completed.
+* Start with the SPF version, this part defines the record as SPF. An SPF record should always start with the version number v=spf1 (version 1) this tag defines the record as SPF. There used to be a second version of SPF (called: SenderID), but this was discontinued.
+
+* After including the v=spf1 SPF version tag you should follow with all IP addresses that are authorized to send email on your behalf. For example: <code>v=spf1 ip4:34.243.61.237 ip6:2a05:d018:e3:8c00:bb71:dea8:8b83:851e</code>
+
+* Next, you can include an include tag for every third-party organization that is used to send email on your behalf e.g. <code>include:thirdpartydomain.com.</code> This tag indicates that this particular third party is authorized to send email on behalf of your domain. You need to consult with the third party to learn which domain to use as a value for the ‘include’ statement.
+
+* Once you have implemented all IP addresses and include tags you should end your record with an <code>~all</code> or <code>-all</code> tag. The all tag is an important part of the SPF record as it indicates what policy should be applied when ISPs detect a server which is not listed in your SPF record. If an unauthorized server does send email on behalf of your domain, action is taken according to the policy that has been published (e.g. reject the email or mark it as spam). What is the difference between these tags? You need to instruct how strict servers need to treat the emails. The <code>~all</code> tag indicates a soft fail and the <code>-all</code> indicates a hardfail. The all tag has the following basic markers:<br><br>
+`-all` – servers that aren’t listed in the SPF record are not authorized to send email (not compliant emails will be rejected)<br>
+`~all` – if the email is received from a server that isn’t listed, the email will be marked as a soft fail (emails will be accepted but marked)<br>
+`+all` - we strongly recommend not to use this option, this tag allows any server to send email from your domain<br>
+
+* After defining your SPF record your record might look something like this:
+<code>v=spf1 ip4:34.243.61.237 ip6:2a05:d018:e3:8c00:bb71:dea8:8b83:851e include:thirdpartydomain.com -all</code>
+
+Useful resources:
+
+- [SPF Record Checker](https://www.dmarcanalyzer.com/spf/checker/)
+- [SPF Syntax](https://www.spf-record.com/syntax)
+
 
 </details>
 
